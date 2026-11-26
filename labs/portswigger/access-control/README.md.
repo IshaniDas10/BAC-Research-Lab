@@ -1,0 +1,164 @@
+# 🔐 PortSwigger — Access Control Labs
+
+This directory documents my practical study of Access Control vulnerabilities through PortSwigger Web Security Academy.
+
+**Learning Platform:** [PortSwigger Web Security Academy](https://portswigger.net/web-security/access-control)
+
+**Category:** Access Control
+
+**Objective:** Understand, identify, exploit and prevent Broken Access Control vulnerabilities through hands-on security labs.
+
+---
+
+## 🎯 Learning Objectives
+
+- Understand how access control works in web applications.
+- Identify vertical, horizontal and context-dependent access controls.
+- Practise privilege escalation.
+- Identify unprotected functionality and authorization bypasses.
+- Understand parameter-based access control.
+- Discover and exploit IDOR vulnerabilities.
+- Test authorization in multi-step processes.
+- Understand Referer-based and location-based access controls.
+- Learn secure authorization implementation and prevention.
+
+---
+
+## 📚 Learning Roadmap
+
+The following sequence follows the Access Control learning path on PortSwigger Web Security Academy.
+
+### 01. What Is Access Control?
+
+Understand the different ways applications restrict access to resources and functionality.
+
+- [ ] Vertical access controls
+- [ ] Horizontal access controls
+- [ ] Context-dependent access controls
+
+### 02. Vertical Privilege Escalation
+
+Understand how users gain access to functionality or permissions belonging to higher-privileged users.
+
+- [ ] Unprotected functionality
+- [ ] Parameter-based access control
+- [ ] Platform misconfiguration
+- [ ] URL-matching discrepancies
+
+### 03. Horizontal Privilege Escalation
+
+Understand how one user accesses another user's resources or functionality without permission.
+
+- [ ] Study the concept
+- [ ] Complete relevant practical labs
+
+### 04. Horizontal to Vertical Privilege Escalation
+
+Understand how horizontal access to another user's account can lead to higher privileges.
+
+- [ ] Study the attack chain
+- [ ] Complete relevant practical labs
+
+### 05. Insecure Direct Object References (IDOR)
+
+Understand how applications expose direct references to objects without properly checking authorization.
+
+- [ ] Direct references to database objects
+- [ ] Direct references to static files
+
+### 06. Vulnerabilities in Multi-Step Processes
+
+Understand how authorization weaknesses in individual workflow steps can allow unauthorized actions.
+
+- [ ] Study multi-step authorization
+- [ ] Complete relevant practical labs
+
+### 07. Vulnerabilities in Referer-Based Controls
+
+Understand why relying on the HTTP Referer header for authorization is insecure.
+
+- [ ] Study Referer-based access control
+- [ ] Complete relevant practical labs
+
+### 08. Vulnerabilities in Location-Based Controls
+
+Understand how location-related restrictions can be bypassed when applications trust client-controlled information.
+
+- [ ] Study location-based access control
+- [ ] Complete relevant practical labs
+
+### 09. Preventing Access Control Vulnerabilities
+
+Study secure access-control implementation and remediation.
+
+- [ ] Enforce authorization server-side
+- [ ] Apply least privilege
+- [ ] Deny access by default
+- [ ] Verify resource ownership
+- [ ] Protect administrative functionality
+- [ ] Validate authorization on every relevant request
+- [ ] Implement centralized authorization checks
+
+---
+
+## 🧪 Lab Documentation
+
+Each completed exercise will have its own report.
+
+Reports follow the reusable template:
+
+[`../../lab-report-template.md`](../../lab-report-template.md)
+
+Every report should document:
+
+1. Lab objective
+2. Vulnerability concept
+3. Reconnaissance
+4. Testing methodology
+5. HTTP request and response analysis
+6. Exploitation steps
+7. Evidence
+8. Root cause
+9. Security impact
+10. Prevention
+11. Key takeaways
+
+---
+
+## 🛠️ Tools
+
+- Burp Suite Community Edition
+- Browser Developer Tools
+- PortSwigger Web Security Academy
+
+---
+
+## 📊 Learning Progress
+
+| No. | Topic | Status |
+|---|---|---|
+| 01 | What Is Access Control? | Not Started |
+| 02 | Vertical Privilege Escalation | Not Started |
+| 03 | Horizontal Privilege Escalation | Not Started |
+| 04 | Horizontal to Vertical Privilege Escalation | Not Started |
+| 05 | Insecure Direct Object References (IDOR) | Not Started |
+| 06 | Multi-Step Process Vulnerabilities | Not Started |
+| 07 | Referer-Based Access Control | Not Started |
+| 08 | Location-Based Access Control | Not Started |
+| 09 | Prevention | Not Started |
+
+**Note:** A topic is marked complete only after studying its concepts and attempting its relevant labs. Individual lab completion is tracked separately.
+
+---
+
+## 📖 Learning Approach
+
+For every topic:
+
+**Understand → Explore → Intercept → Test → Exploit → Analyse → Prevent → Document**
+
+The objective is not just to complete labs, but to develop the ability to independently identify and investigate authorization vulnerabilities.
+
+---
+
+**Learn it. Test it. Understand it. Document it.**
