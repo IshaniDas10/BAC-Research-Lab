@@ -46,6 +46,12 @@ Python · FastAPI · HTTPX · Playwright · Burp Suite · OWASP ZAP · Pytest ·
 
 Each vulnerability will be studied through its definition, root cause, exploitation methodology, impact, detection, prevention and practical testing.
 
+## 🛠️ Tools & Practical Guides
+
+| Tool | Learning Resource | Purpose |
+|---|---|---|
+| Burp Suite | [Burp Suite Crash Course](tools/burp-suite/README.md) | Learn HTTP interception, request modification, Repeater, Intruder, and other essential tools. |
+
 ## Ethics
 
 All testing is restricted to intentionally vulnerable labs, systems owned by the researcher, or systems for which explicit authorization has been obtained.
