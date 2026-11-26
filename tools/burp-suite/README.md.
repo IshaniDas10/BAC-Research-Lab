@@ -1,0 +1,451 @@
+# Burp Suite Crash Course
+### Everything You Need to Know Before Starting Web Security Labs
+
+Burp Suite is a web application security testing platform used to intercept, inspect, modify, and analyse HTTP/HTTPS traffic between a browser and a web server.
+
+This guide covers the essential Burp Suite features required for practical web security testing, especially Broken Access Control (BAC).
+
+---
+
+## Table of Contents
+
+1. [Introduction to Burp Suite](#1-introduction-to-burp-suite)
+2. [Setting Up Burp Suite](#2-setting-up-burp-suite)
+3. [Proxy](#3-proxy)
+4. [HTTP History](#4-http-history)
+5. [Target and Site Map](#5-target-and-site-map)
+6. [Scope](#6-scope)
+7. [Repeater](#7-repeater)
+8. [Intruder](#8-intruder)
+9. [Decoder](#9-decoder)
+10. [Comparer](#10-comparer)
+11. [BAC Testing Workflow](#11-bac-testing-workflow)
+12. [Practical Checklist](#12-practical-checklist)
+
+---
+
+## 1. Introduction to Burp Suite
+
+Burp Suite acts as an intermediary between the browser and the web server.
+
+It allows a tester to:
+
+- Capture HTTP requests and responses.
+- Inspect application communication.
+- Modify request parameters, headers, and cookies.
+- Replay requests with different values.
+- Identify access control weaknesses.
+- Compare server responses.
+
+**Basic working flow:**
+
+Browser → Burp Suite → Web Server
+
+Web Server → Burp Suite → Browser
+
+### Burp Suite Editions
+
+- Community Edition: Free edition suitable for learning and manual testing.
+- Professional Edition: Includes additional automated testing capabilities.
+
+We will use Burp Suite Community Edition.
+
+---
+
+## 2. Setting Up Burp Suite
+
+### Step 1: Open Burp Suite
+
+1. Launch Burp Suite Community Edition.
+2. Select Temporary Project.
+3. Start Burp.
+
+### Step 2: Check the Proxy Listener
+
+Navigate to:
+
+`Proxy → Proxy settings`
+
+Check that the proxy listener is running.
+
+Default configuration:
+
+| Setting | Value |
+|---|---|
+| Proxy host | 127.0.0.1 |
+| Proxy port | 8080 |
+| Protocol | HTTP |
+
+### Step 3: Configure Firefox Using FoxyProxy
+
+1. Install FoxyProxy in Firefox.
+2. Open FoxyProxy settings.
+3. Create a new proxy profile.
+4. Enter the following details:
+
+| Setting | Value |
+|---|---|
+| Proxy type | HTTP |
+| IP address | 127.0.0.1 |
+| Port | 8080 |
+
+5. Save the profile.
+6. Activate it when using Burp Suite.
+
+### Step 4: Configure HTTPS
+
+If HTTPS websites show certificate errors:
+
+1. Connect Firefox to Burp.
+2. Visit `http://burp`.
+3. Download Burp's CA certificate.
+4. Install it in Firefox's certificate settings.
+
+Follow PortSwigger's official instructions.
+
+---
+
+## 3. Proxy
+
+**Purpose:** Intercept and inspect communication between the browser and server.
+
+Navigate to:
+
+`Proxy → Intercept`
+
+### Important Controls
+
+| Control | Function |
+|---|---|
+| Intercept is on | Pause matching requests |
+| Forward | Send the paused request onwards |
+| Drop | Discard the paused request |
+| Intercept is off | Allow requests to pass without manually pausing them |
+
+### How to Use It
+
+1. Turn Intercept ON.
+2. Visit a page in Firefox.
+3. Observe the intercepted request.
+4. Inspect the request.
+5. Click Forward to send it.
+6. Turn Intercept OFF when you want normal browsing.
+
+**Important:** Intercept OFF does not mean Burp stops recording traffic. Requests can still appear in HTTP History.
+
+---
+
+## 4. HTTP History
+
+**Purpose:** View previously captured HTTP requests and responses.
+
+Navigate to:
+
+`Proxy → HTTP history`
+
+HTTP History is particularly useful because you do not need to intercept every request manually.
+
+You can:
+
+- View requested URLs.
+- Inspect HTTP methods.
+- Examine request headers.
+- Inspect cookies and parameters.
+- Read server responses.
+- Send interesting requests to Repeater.
+
+### Recommended Workflow
+
+1. Keep Intercept OFF.
+2. Browse the application.
+3. Open HTTP History.
+4. Find an interesting request.
+5. Right-click it.
+6. Select Send to Repeater.
+
+---
+
+## 5. Target and Site Map
+
+**Purpose:** Understand the structure of the target application.
+
+Navigate to:
+
+`Target → Site map`
+
+Site Map displays the discovered website structure, including hosts, directories, and endpoints.
+
+Example:
+
+```text
+example.com
+├── login
+├── my-account
+├── admin
+├── api
+│   └── users
+└── logout
+```
+
+### Understanding Site Map Entries
+
+- Black entries: Items Burp has requested.
+- Gray entries: Items discovered or inferred but not requested.
+
+### Why It Matters for BAC
+
+Site Map can help identify potentially sensitive endpoints:
+
+- `/admin`
+- `/my-account`
+- `/api/users`
+- `/admin/deleteUser`
+
+These are examples only; actual endpoints depend on the application.
+
+---
+
+## 6. Scope
+
+**Purpose:** Define which hosts and URLs belong to your authorised testing target.
+
+Scope helps prevent unrelated traffic from mixing with your lab traffic.
+
+### How to Set Scope
+
+1. Open Target → Site map.
+2. Find your authorised lab host.
+3. Right-click it.
+4. Select Add to scope.
+5. Configure HTTP History filters to show in-scope items.
+
+**Remember:** Scope is a testing boundary, not an access control mechanism on the target server.
+
+Only test systems you are authorised to assess.
+
+---
+
+## 7. Repeater
+
+**Purpose:** Modify and resend HTTP requests manually.
+
+Repeater is one of the most important tools for Broken Access Control testing.
+
+### Example
+
+Original request:
+
+```http
+GET /my-account?id=123 HTTP/1.1
+Host: example.com
+Cookie: session=YOUR_SESSION
+```
+
+Modified request:
+
+```http
+GET /my-account?id=124 HTTP/1.1
+Host: example.com
+Cookie: session=YOUR_SESSION
+```
+
+### How to Use Repeater
+
+1. Find an interesting request in HTTP History.
+2. Right-click → Send to Repeater.
+3. Open the Repeater tab.
+4. Inspect the original request.
+5. Modify a parameter, header, or cookie when testing a hypothesis.
+6. Click Send.
+7. Examine the response.
+
+### BAC Testing Examples
+
+- Change a user ID to test horizontal access control.
+- Try accessing an administrative endpoint.
+- Modify a role-related parameter.
+- Compare responses from different requests.
+
+**Important:** A changed request alone does not prove a vulnerability. Verify whether the server actually returns or permits something the current user is not authorised to access.
+
+---
+
+## 8. Intruder
+
+**Purpose:** Automate repeated requests using different payload values.
+
+Example:
+
+```text
+id=101
+id=102
+id=103
+id=104
+```
+
+Instead of manually modifying each request, Intruder can insert different values into selected positions.
+
+### Common Uses
+
+- Testing multiple object IDs.
+- Checking parameter behaviour.
+- Testing a controlled list of values.
+
+For beginners, understand Repeater first. Intruder can be learned afterwards.
+
+---
+
+## 9. Decoder
+
+**Purpose:** Encode and decode data.
+
+Examples:
+
+| Encoding | Example |
+|---|---|
+| URL encoding | `%20` → space |
+| Base64 | `YWRtaW4=` → `admin` |
+| HTML encoding | `&lt;` → `<` |
+
+### Why It Matters
+
+Decoder is useful when examining:
+
+- Encoded parameters.
+- Cookies.
+- Tokens.
+- URL values.
+- Encoded request data.
+
+**Remember:** Encoding is not encryption. Base64 does not provide confidentiality.
+
+---
+
+## 10. Comparer
+
+**Purpose:** Compare two pieces of data, such as HTTP requests or responses.
+
+Example:
+
+- Response A: User ID 123.
+- Response B: User ID 124.
+
+Comparer helps identify differences between the responses.
+
+### Why It Matters for BAC
+
+It can help identify:
+
+- Different account information.
+- Different permission responses.
+- Changes in returned data.
+- Differences between authorised and unauthorised requests.
+
+---
+
+## 11. BAC Testing Workflow
+
+A practical workflow for Broken Access Control labs:
+
+1. Open the authorised PortSwigger lab.
+2. Browse the application normally.
+3. Record interesting requests in HTTP History.
+4. Explore endpoints through Target → Site Map.
+5. Identify the relevant request.
+6. Send it to Repeater.
+7. Understand the original request and response.
+8. Form a hypothesis about an access control weakness.
+9. Modify one relevant request element.
+10. Send the request.
+11. Analyse the response.
+12. Verify whether unauthorised access actually occurred.
+13. Document the evidence and root cause.
+
+### Example: Testing for IDOR
+
+Normal request:
+
+```http
+GET /my-account?id=123
+```
+
+Hypothesis:
+
+The server may trust the supplied user ID without checking whether the logged-in user owns that account.
+
+Test:
+
+Change the ID to another controlled test account's ID and inspect the response.
+
+Evidence:
+
+Record whether another user's protected information was actually returned.
+
+---
+
+## 12. Practical Checklist
+
+### Setup
+- [ ] Install Burp Suite Community Edition.
+- [ ] Configure Firefox.
+- [ ] Configure FoxyProxy.
+- [ ] Verify the proxy listener.
+- [ ] Install the Burp CA certificate if required.
+
+### Proxy
+- [ ] Understand Intercept ON and OFF.
+- [ ] Understand Forward and Drop.
+- [ ] Inspect a captured request.
+
+### HTTP History
+- [ ] View captured requests.
+- [ ] Inspect request headers.
+- [ ] Inspect response bodies.
+- [ ] Send a request to Repeater.
+
+### Target and Scope
+- [ ] Understand Site Map.
+- [ ] Identify application endpoints.
+- [ ] Add the authorised lab host to Scope.
+- [ ] Filter HTTP History by scope.
+
+### Repeater
+- [ ] Send a request to Repeater.
+- [ ] Resend an unchanged request.
+- [ ] Modify a query parameter.
+- [ ] Inspect the response.
+- [ ] Compare original and modified behaviour.
+
+### Other Tools
+- [ ] Understand Intruder.
+- [ ] Practise Decoder.
+- [ ] Practise Comparer.
+
+---
+
+## Learning Priority
+
+| Priority | Feature |
+|---|---|
+| 1 | Proxy |
+| 2 | HTTP History |
+| 3 | Target / Site Map |
+| 4 | Scope |
+| 5 | Repeater |
+| 6 | Intruder |
+| 7 | Decoder |
+| 8 | Comparer |
+
+**My recommendation:** Become comfortable with Proxy, HTTP History, Site Map, Scope, and Repeater before attempting more advanced testing.
+
+---
+
+## Official Resources
+
+- [Burp Suite Documentation](https://portswigger.net/burp/documentation)
+- [Burp Suite Getting Started](https://portswigger.net/burp/documentation/desktop/getting-started)
+- [PortSwigger Web Security Academy](https://portswigger.net/web-security)
+
+---
+
+*This guide is part of my personal cybersecurity learning and research repository. All practical testing should be performed only on authorised labs and systems.*
